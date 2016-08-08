@@ -7,3 +7,17 @@ path /markers {
   read() { true }
   write() { true }
 }
+
+path /markers/{id} is Marker {
+  read() { true }
+  write() { true }
+}
+
+type Position {
+  lat: Number,
+  lng: Number
+}
+
+type Marker {
+  position: Position
+}
