@@ -13,6 +13,16 @@ path /markers/{id} is Marker {
   write() { true }
 }
 
+path /users {
+  read() { true }
+  write() { true }
+}
+
+path /users/{id} is User {
+  read() { true }
+  write() { true }
+}
+
 type Position {
   lat: Number,
   lng: Number
@@ -20,4 +30,10 @@ type Position {
 
 type Marker {
   position: Position
+}
+
+type User {
+  displayName: String,
+  email: String,
+  photoURL: String | Null,
 }

@@ -6,6 +6,7 @@ export class MapView extends Component {
   render () {
     return <MapContainer/>;
   }
+
 };
 
 export default MapView;
