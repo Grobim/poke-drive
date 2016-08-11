@@ -4,7 +4,7 @@ import MapContainer from 'containers/Map';
 export class MapView extends Component {
 
   render () {
-    return <MapContainer/>;
+    return <MapContainer />;
   }
 
 };

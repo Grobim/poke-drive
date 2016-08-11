@@ -1,49 +1,87 @@
 import { default as React, Component, PropTypes } from 'react';
-import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 import { reduxForm } from 'redux-form';
-import { LOGGED_STATE } from 'reducers/user';
+import { LOGGED_STATE, syncUser, unSyncUser, updateUser } from 'reducers/user';
 
 const mapStateToProps = ({ user }) => ({
-  user,
+  initialValues: user,
   isLoggedIn: user.state === LOGGED_STATE
 });
 
-const mapDispatchToPros = (dispatch) => ({
-  dispatch
+const mapDispatchToPros = ({
+  push,
+  syncUser,
+  unSyncUser,
+  updateUser
 });
 
 export class ProfilContainer extends Component {
+  static propTypes = {
+    fields: PropTypes.object.isRequired,
+    syncUser: PropTypes.func.isRequired,
+    unSyncUser: PropTypes.func.isRequired,
+    updateUser: PropTypes.func.isRequired,
+    initialValues: PropTypes.object.isRequired,
+    handleSubmit: PropTypes.func.isRequired,
+    isLoggedIn: PropTypes.bool.isRequired,
+    push: PropTypes.func.isRequired
+  }
 
   componentWillMount () {
     const {
       isLoggedIn,
-      dispatch
+      push
     } = this.props;
 
     if (!isLoggedIn) {
-      dispatch(push('/'));
+      push('/');
+    }
+  }
+
+  componentDidMount () {
+    const {
+      isLoggedIn,
+      syncUser
+    } = this.props;
+
+    if (isLoggedIn) {
+      syncUser();
+    }
+  }
+
+  componentWillUnmount () {
+    const {
+      isLoggedIn,
+      unSyncUser
+    } = this.props;
+
+    if (isLoggedIn) {
+      unSyncUser();
     }
   }
 
   componentWillReceiveProps (newProps) {
     const {
-      dispatch
+      push
     } = this.props;
 
     if (!newProps.isLoggedIn) {
-      dispatch(push('/'));
+      push('/');
     }
   }
 
+  submit = this.submit.bind(this);
   submit (values, dispatch) {
-    console.log(values);
+    const {
+      updateUser
+    } = this.props;
+
+    updateUser(values);
   }
 
   render () {
     const {
-      user,
-      fields: {userName},
+      fields: {displayName, email, photoURL},
       handleSubmit
     } = this.props;
 
@@ -51,7 +89,9 @@ export class ProfilContainer extends Component {
       <div>
         <h3>ProfilContainer</h3>
         <form onSubmit={handleSubmit(this.submit)}>
-          <input type='text' {...userName} />
+          <input type='text' {...displayName} />
+          <input type='text' {...email} />
+          <input type='text' {...photoURL} />
           <button type='submit'>Submit</button>
         </form>
       </div>
@@ -62,5 +102,5 @@ export class ProfilContainer extends Component {
 
 export default reduxForm({
   form: 'profileForm',
-  fields: ['userName']
+  fields: ['displayName', 'email', 'photoURL']
 }, mapStateToProps, mapDispatchToPros)(ProfilContainer);

@@ -40,10 +40,10 @@ if (__DEBUG__) {
 // Firebase initialisation
 // ========================================================
 firebase.initializeApp({
-  apiKey: "AIzaSyBbr2bFApKQ2_XYbYOuzYSDU_fAHxHd3k8",
-  authDomain: "poke-drive-dev.firebaseapp.com",
-  databaseURL: "https://poke-drive-dev.firebaseio.com",
-  storageBucket: "poke-drive-dev.appspot.com",
+  apiKey: 'AIzaSyBbr2bFApKQ2_XYbYOuzYSDU_fAHxHd3k8',
+  authDomain: 'poke-drive-dev.firebaseapp.com',
+  databaseURL: 'https://poke-drive-dev.firebaseio.com',
+  storageBucket: 'poke-drive-dev.appspot.com'
 });
 
 // ========================================================

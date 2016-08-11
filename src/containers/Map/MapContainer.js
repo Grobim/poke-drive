@@ -55,10 +55,6 @@ export class MapContainer extends Component {
   }
 
   render () {
-    const {
-      markers
-    } = this.props;
-
     return (
       <SimpleMap
         markers={this.markers}

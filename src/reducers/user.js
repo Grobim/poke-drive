@@ -4,6 +4,7 @@ import { push } from 'react-router-redux';
 export const LOGGED_USER = 'LOGGED_USER';
 export const LOGGING_USER = 'LOGGING_USER';
 export const SIGNED_OUT = 'SIGNED_OUT';
+export const UPDATED_USER = 'UPDATED_USER';
 
 export const LOGGING_STATE = 'LOGGING';
 export const LOGGED_STATE = 'LOGGED';
@@ -23,6 +24,11 @@ const loggedUser = (userData) => ({
 
 const signedOut = () => ({
   type: SIGNED_OUT
+});
+
+const updatedUser = (userData) => ({
+  type: UPDATED_USER,
+  payload: userData
 });
 
 export const logUserWithGoogle = () => {
@@ -70,8 +76,8 @@ export const logUserWithGoogle = () => {
     })
     .catch((error) => {
       console.log(error);
-    })
-  }
+    });
+  };
 };
 
 export const signOut = () => {
@@ -82,12 +88,38 @@ export const signOut = () => {
     .catch((error) => {
       console.log(error);
     });
-  }
+  };
+};
+
+export const syncUser = () => {
+  return (dispatch, getState) => {
+    getUsersRef().child(getState().user.uid).on('value', (snap) => {
+      dispatch(updatedUser({
+        ...snap.val(),
+        uid: snap.key
+      }));
+    });
+  };
+};
+
+export const unSyncUser = () => {
+  return (dispatch, getState) => {
+    getUsersRef().child(getState().user.uid).off('value');
+  };
+};
+
+export const updateUser = (userData) => {
+  return (dispatch, getState) => {
+    getUsersRef().child(getState().user.uid).set(userData);
+  };
 };
 
 export const actions = {
   logUserWithGoogle,
-  signOut
+  syncUser,
+  unSyncUser,
+  signOut,
+  updateUser
 };
 
 const reducers = {
@@ -99,6 +131,10 @@ const reducers = {
   [LOGGING_USER]: (state) => ({
     ...state,
     state: LOGGING_STATE
+  }),
+  [UPDATED_USER]: (state, { payload }) => ({
+    ...state,
+    ...payload
   }),
   [SIGNED_OUT]: (state) => initialState
 };

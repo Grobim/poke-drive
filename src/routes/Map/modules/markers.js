@@ -53,8 +53,8 @@ export const syncMarkers = () => {
         dispatch(deletedMarker(snap.key));
       });
     }
-  }
-}
+  };
+};
 
 export const addMarker = (position, data) => {
   return (dispatch, getState) => {
@@ -62,7 +62,7 @@ export const addMarker = (position, data) => {
       position,
       ...data
     });
-  }
+  };
 };
 
 export const deleteMarker = (key) => {
