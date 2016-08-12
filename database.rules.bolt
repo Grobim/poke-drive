@@ -20,7 +20,7 @@ path /users {
 
 path /users/{id} is User {
   read() { true }
-  write() { true }
+  write() { isCurrentUser(id) }
 }
 
 type Position {
@@ -37,3 +37,6 @@ type User {
   email: String,
   photoURL: String | Null,
 }
+
+isCurrentUser(uid) { auth != null && auth.uid == uid }
+isSignedIn() { auth != null }

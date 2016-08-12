@@ -1,10 +1,13 @@
 import { default as React, Component, PropTypes } from 'react';
 import { push } from 'react-router-redux';
-import { reduxForm } from 'redux-form';
+import { connect } from 'react-redux';
+
 import { LOGGED_STATE, syncUser, unSyncUser, updateUser } from 'reducers/user';
 
+import ProfileComponent from 'components/Profile';
+
 const mapStateToProps = ({ user }) => ({
-  initialValues: user,
+  user,
   isLoggedIn: user.state === LOGGED_STATE
 });
 
@@ -17,12 +20,10 @@ const mapDispatchToPros = ({
 
 export class ProfilContainer extends Component {
   static propTypes = {
-    fields: PropTypes.object.isRequired,
     syncUser: PropTypes.func.isRequired,
     unSyncUser: PropTypes.func.isRequired,
     updateUser: PropTypes.func.isRequired,
-    initialValues: PropTypes.object.isRequired,
-    handleSubmit: PropTypes.func.isRequired,
+    user: PropTypes.object,
     isLoggedIn: PropTypes.bool.isRequired,
     push: PropTypes.func.isRequired
   }
@@ -71,7 +72,7 @@ export class ProfilContainer extends Component {
   }
 
   submit = this.submit.bind(this);
-  submit (values, dispatch) {
+  submit (values) {
     const {
       updateUser
     } = this.props;
@@ -81,26 +82,17 @@ export class ProfilContainer extends Component {
 
   render () {
     const {
-      fields: {displayName, email, photoURL},
-      handleSubmit
+      user
     } = this.props;
 
     return (
-      <div>
-        <h3>ProfilContainer</h3>
-        <form onSubmit={handleSubmit(this.submit)}>
-          <input type='text' {...displayName} />
-          <input type='text' {...email} />
-          <input type='text' {...photoURL} />
-          <button type='submit'>Submit</button>
-        </form>
-      </div>
+      <ProfileComponent
+        initialValues={user}
+        onSubmit={this.submit}
+      />
     );
   }
 
 };
 
-export default reduxForm({
-  form: 'profileForm',
-  fields: ['displayName', 'email', 'photoURL']
-}, mapStateToProps, mapDispatchToPros)(ProfilContainer);
+export default connect(mapStateToProps, mapDispatchToPros)(ProfilContainer);
