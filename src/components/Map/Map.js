@@ -4,7 +4,9 @@ import {
   GoogleMap,
   Marker
 } from 'react-google-maps';
+
 import classes from './Map.scss';
+import pokeball from './assets/pokeball.png';
 
 /*
  * This is the modify version of:
@@ -19,9 +21,38 @@ export class SimpleMap extends Component {
   static propTypes = {
     markers: PropTypes.array,
     containerElementProps: PropTypes.object,
+    positionLocation: PropTypes.object,
     onMapClick: PropTypes.func,
     onMarkerRightclick: PropTypes.func
   };
+
+  get positionMarker () {
+    const {
+      positionLocation
+    } = this.props;
+
+    const image = {
+      url: pokeball,
+      size: new google.maps.Size(300, 301),
+      origin: new google.maps.Point(0, 0),
+      anchor: new google.maps.Point(15, 15),
+      scaledSize: new google.maps.Size(30, 30)
+    };
+
+    if (
+      positionLocation &&
+      positionLocation.accuracy &&
+      positionLocation.position.lat &&
+      positionLocation.position.lng
+    ) {
+      return (
+        <Marker
+          {...positionLocation}
+          icon={image}
+        />
+      );
+    }
+  }
 
   render () {
     const {
@@ -52,6 +83,7 @@ export class SimpleMap extends Component {
                   onRightclick={() => onMarkerRightclick(marker.key)}
                 />
               ))}
+              {this.positionMarker}
             </GoogleMap>
           }
         />

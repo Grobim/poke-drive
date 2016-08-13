@@ -2,7 +2,7 @@ import { combineReducers } from 'redux';
 import { routerReducer as router } from 'react-router-redux';
 import { reducer as form } from 'redux-form';
 import { default as markers } from 'routes/Map/modules/markers';
-import { user } from 'reducers';
+import { user, userLocation } from 'reducers';
 
 export const makeRootReducer = (asyncReducers) => {
   return combineReducers({
@@ -11,6 +11,7 @@ export const makeRootReducer = (asyncReducers) => {
     form,
     markers,
     user,
+    userLocation,
     ...asyncReducers
   });
 };

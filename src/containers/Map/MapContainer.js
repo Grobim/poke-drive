@@ -7,23 +7,49 @@ import { connect } from 'react-redux';
 
 import SimpleMap from 'components/Map';
 import { actions as markersActions } from 'routes/Map/modules/markers';
+import { actions as userLocationActions } from 'reducers/userLocation';
 
-const mapStateToProps = ({ markers }) => ({ markers: markers.data });
+const mapStateToProps = ({
+  markers,
+  userLocation
+}) => ({
+  markers: markers.data,
+  userLocation: {
+    position: {
+      lat: userLocation.latitude,
+      lng: userLocation.longitude
+    },
+    accuracy: userLocation.accuracy
+  }
+});
 
 export class MapContainer extends Component {
   static propTypes = {
     markers: PropTypes.array.isRequired,
     addMarker: PropTypes.func.isRequired,
     deleteMarker: PropTypes.func.isRequired,
-    syncMarkers: PropTypes.func.isRequired
+    syncMarkers: PropTypes.func.isRequired,
+    syncLocation: PropTypes.func.isRequired,
+    unsyncLocation: PropTypes.func.isRequired,
+    userLocation: PropTypes.object.isRequired
   };
 
   componentDidMount () {
     const {
-      syncMarkers
+      syncMarkers,
+      syncLocation
     } = this.props;
 
     syncMarkers();
+    syncLocation();
+  }
+
+  componentWillUnmount () {
+    const {
+      unsyncLocation
+    } = this.props;
+
+    unsyncLocation();
   }
 
   get markers () {
@@ -55,8 +81,13 @@ export class MapContainer extends Component {
   }
 
   render () {
+    const {
+      userLocation
+    } = this.props;
+
     return (
       <SimpleMap
+        positionLocation={userLocation}
         markers={this.markers}
         onMapClick={this.handleMapClick}
         onMarkerRightclick={this.handleMarkerRightclick}
@@ -65,4 +96,7 @@ export class MapContainer extends Component {
   }
 }
 
-export default connect(mapStateToProps, markersActions)(MapContainer);
+export default connect(mapStateToProps, {
+  ...markersActions,
+  ...userLocationActions
+})(MapContainer);
